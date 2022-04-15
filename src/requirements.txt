@@ -1,0 +1,6 @@
+
+redis
+requests
+xmltodict
+jason
+flask 

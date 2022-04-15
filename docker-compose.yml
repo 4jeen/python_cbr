@@ -1,0 +1,39 @@
+
+version: "3"
+
+services:
+
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    extra_hosts:
+        redisdb: 172.59.0.3
+        xch2json: 172.59.0.2
+    networks:
+      cbr_network:
+        ipv4_address: 172.59.0.3
+  
+  server:
+    build: src/
+    command: python3 ./srv.py
+    restart: unless-stopped
+    extra_hosts:
+        redisdb: 172.59.0.3
+        xch2json: 172.59.0.2
+    networks:
+      cbr_network:
+        ipv4_address: 172.59.0.2
+    ports:
+      - 8000:8000  
+    
+    depends_on:
+      - redis
+networks:
+    cbr_network:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: "172.59.0.0/16"  
+    
+    
